@@ -1,7 +1,7 @@
 // Copyright (c) 2018-2023, agnos.ai UK Ltd, all rights reserved.
 //---------------------------------------------------------------
 //! build.rs
-#![feature(absolute_path)]
+// #![feature(absolute_path)]
 
 extern crate core;
 
@@ -141,12 +141,17 @@ lazy_static! {
     static ref RDFOX_VERSION_EXPECTED: &'static str =
         option_env!("RDFOX_VERSION_EXPECTED").unwrap_or("6.3b");
 }
-#[cfg(feature = "rdfox-7-0")]
+#[cfg(feature = "rdfox-7-0a")]
 lazy_static! {
     static ref RDFOX_VERSION_EXPECTED: &'static str =
-        option_env!("RDFOX_VERSION_EXPECTED").unwrap_or("7.0");
+        option_env!("RDFOX_VERSION_EXPECTED").unwrap_or("7.0a");
 }
-#[cfg(not(any(feature = "rdfox-6-2", feature = "rdfox-6-3a", feature = "rdfox-6-3b", feature = "rdfox-7-0")))]
+#[cfg(not(any(
+    feature = "rdfox-6-2",
+    feature = "rdfox-6-3a",
+    feature = "rdfox-6-3b",
+    feature = "rdfox-7-0a"
+)))]
 compile_error!("You have to at least specify one of the rdfox-X-Y version number features");
 
 fn rdfox_download_url() -> String {
@@ -182,7 +187,7 @@ fn rdfox_lib_dir() -> PathBuf {
         env::var("OUT_DIR").unwrap(),
         rdfox_archive_name()
     )
-        .into()
+    .into()
 }
 
 fn rdfox_header_dir() -> PathBuf {
@@ -191,7 +196,7 @@ fn rdfox_header_dir() -> PathBuf {
         env::var("OUT_DIR").unwrap(),
         rdfox_archive_name()
     )
-        .into()
+    .into()
 }
 
 fn download_rdfox() -> Result<PathBuf, curl::Error> {
@@ -305,10 +310,7 @@ fn set_clang_path<S: Into<String>>(path: Option<S>) -> Option<(PathBuf, PathBuf)
         clang_bin = path.join("clang");
     }
     if clang_bin.exists() {
-        println!(
-            "cargo:warning=using {}",
-            clang_bin.display()
-        );
+        println!("cargo:warning=using {}", clang_bin.display());
     }
     Some((path, clang_bin))
 }
@@ -346,7 +348,10 @@ fn add_clang_path() {
     let clang_path = clang_path.to_str().unwrap();
 
     println!("cargo:rustc-env=LIBCLANG_PATH={:}", clang_path);
-    println!("cargo:rustc-link-search=native={:}/lib", clang_path);
+    println!(
+        "cargo:rustc-link-search=native={:}/lib",
+        clang_path
+    );
     println!(
         "cargo:rustc-link-search=native={:}/lib/c++",
         clang_path
@@ -406,7 +411,13 @@ fn check_homebrew_prefix() -> Option<PathBuf> {
 fn check_llvm_via_brew() -> Option<String> {
     if let Some(homebrew_prefix) = check_homebrew_prefix() {
         if homebrew_prefix.join("opt/llvm").exists() {
-            return Some(homebrew_prefix.join("opt/llvm").to_str().unwrap().to_owned());
+            return Some(
+                homebrew_prefix
+                    .join("opt/llvm")
+                    .to_str()
+                    .unwrap()
+                    .to_owned(),
+            );
         }
     }
     if let Ok(output) = Command::new("brew").args(["--prefix", "llvm"]).output() {
@@ -424,12 +435,16 @@ fn check_lib_iconv() -> Option<String> {
         if let Ok(path) = homebrew_path.join("opt/libiconv/lib/").canonicalize() {
             if let Some(path_str) = path.to_str() {
                 println!(
-                    "cargo:rustc-link-lib=static:+whole-archive,-bundle,+verbatim={path_str}/libiconv.a"
+                    "cargo:rustc-link-lib=static:+whole-archive,-bundle,+verbatim={path_str}/\
+                     libiconv.a"
                 );
                 println!("cargo:rustc-link-search=native={path_str}");
                 return Some(path_str.to_owned());
             }
-            println!("cargo:warning=libiconv path is not valid: {:?}", path);
+            println!(
+                "cargo:warning=libiconv path is not valid: {:?}",
+                path
+            );
         }
     }
     println!("cargo:warning=libiconv not found");
@@ -444,20 +459,25 @@ fn check_cpp() {
     if let Some(homebrew_path) = check_homebrew_prefix() {
         if let Ok(path) = homebrew_path.join("opt/llvm/c++/libc++.a").canonicalize() {
             if let Some(path_str) = path.to_str() {
-                println!(
-                    "cargo:rustc-link-lib=static:+whole-archive,-bundle,+verbatim={path_str}"
-                );
+                println!("cargo:rustc-link-lib=static:+whole-archive,-bundle,+verbatim={path_str}");
             } else {
-                println!("cargo:warning=libc++ path is not valid: {:?}", path);
+                println!(
+                    "cargo:warning=libc++ path is not valid: {:?}",
+                    path
+                );
             }
         }
-        if let Ok(path) = homebrew_path.join("opt/llvm/c++/libc++abi.a").canonicalize() {
+        if let Ok(path) = homebrew_path
+            .join("opt/llvm/c++/libc++abi.a")
+            .canonicalize()
+        {
             if let Some(path_str) = path.to_str() {
-                println!(
-                    "cargo:rustc-link-lib=static:+whole-archive,-bundle,+verbatim={path_str}"
-                );
+                println!("cargo:rustc-link-lib=static:+whole-archive,-bundle,+verbatim={path_str}");
             } else {
-                println!("cargo:warning=libc++abi path is not valid: {:?}", path);
+                println!(
+                    "cargo:warning=libc++abi path is not valid: {:?}",
+                    path
+                );
             }
         }
     } else {
@@ -524,9 +544,13 @@ fn main() {
     }
 
     if let Ok(_fmt_config) = PathBuf::from(RUSTFMT_CONFIG).canonicalize() {
-        // println!("cargo:warning=Found rustfmt configuration file: {}", _fmt_config.to_str().unwrap());
+        // println!("cargo:warning=Found rustfmt configuration file: {}",
+        // _fmt_config.to_str().unwrap());
     } else {
-        println!("cargo:warning=Could not find rustfmt configuration file: {}", RUSTFMT_CONFIG);
+        println!(
+            "cargo:warning=Could not find rustfmt configuration file: {}",
+            RUSTFMT_CONFIG
+        );
     }
 
     let mut codegen_config = CodegenConfig::all();
@@ -581,7 +605,8 @@ fn main() {
         .generate_inline_functions(true)
         .vtable_generation(false)
         .merge_extern_blocks(true)
-        .wrap_unsafe_ops(false);
+        .wrap_unsafe_ops(false)
+        .respect_cxx_access_specs(true);
 
     for item in BLOCK_LIST_ITEMS {
         builder = builder.blocklist_type(item);

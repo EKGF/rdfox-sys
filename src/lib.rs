@@ -1,50 +1,22 @@
-// Copyright (c) 2018-2023, agnos.ai UK Ltd, all rights reserved.
-//---------------------------------------------------------------
-#![feature(rustc_private)]
-#![feature(ptr_metadata)]
+// Copyright (c) 2024, Object Management Group, all rights reserved.
+//------------------------------------------------------------------
+// #![feature(rustc_private)]
+// #![feature(ptr_metadata)]
 #![doc = include_str!("../README.md")]
+#![allow(dead_code)]
+#![allow(non_camel_case_types)]
+#![allow(non_snake_case)]
+#![deny(unused_crate_dependencies)]
 
 extern crate core;
 
-pub use {
-    class_report::ClassReport,
-    connectable_data_store::ConnectableDataStore,
-    cursor::{Cursor, CursorRow, OpenedCursor},
-    data_store::DataStore,
-    data_store_connection::DataStoreConnection,
-    graph_connection::GraphConnection,
-    license::{find_license, RDFOX_DEFAULT_LICENSE_FILE_NAME, RDFOX_HOME},
-    mime::Mime,
-    namespaces::{Namespaces, NamespacesBuilder},
-    parameters::{DataStoreType, FactDomain, Parameters, PersistenceMode},
-    role_creds::RoleCreds,
-    server::Server,
-    server_connection::ServerConnection,
-    statement::Statement,
-    streamer::Streamer,
-    transaction::Transaction,
-};
+pub use error::Error;
 
-mod class_report;
-mod connectable_data_store;
-mod cursor;
-mod data_store;
-mod data_store_connection;
+mod error;
 mod exception;
-mod graph_connection;
-mod license;
-mod namespaces;
-mod parameters;
-mod role_creds;
-mod server;
-mod server_connection;
-mod statement;
-mod streamer;
-mod transaction;
+#[macro_use]
+mod r#macro;
 
-#[allow(dead_code)]
-#[allow(non_camel_case_types)]
-#[allow(non_snake_case)]
-mod rdfox_api {
-    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
-}
+// pub mod rdfox_api {
+include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+// }

@@ -95,7 +95,7 @@ jobs:
         if: contains(matrix.os, 'macos')
         shell: bash
         env:
-          LLVM_PATH: /Users/runner/work/rdfox-rs/rdfox-rs/llvm
+          LLVM_PATH: /Users/runner/work/rdfox-sys/rdfox-sys/llvm
           LLVM_VERSION: ${{ steps.install-llvm.outputs.version }}
         run: |
           set -x
