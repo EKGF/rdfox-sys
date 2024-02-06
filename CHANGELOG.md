@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.0.2](https://github.com/EKGF/rdfox-sys/compare/0.0.1..0.0.2) - 2024-02-06
+#### Miscellaneous Chores
+- squashed all history from rdfox-rs repo - ([ad12915](https://github.com/EKGF/rdfox-sys/commit/ad1291531761767a58f7f7e537646e2cc65513b0)) - [@jgeluk](https://github.com/jgeluk)
+
+- - -
+
 ## [0.0.1](https://github.com/EKGF/rdfox-sys/compare/5517fc710805ed8c92579c6c7f9310a123dbe447..0.0.1) - 2024-02-01
 #### Bug Fixes
 - **(cursor)** fixed issue with argument indexes - ([2b17f24](https://github.com/EKGF/rdfox-sys/commit/2b17f2441a27cbd6f5ecd0f317ac2f334aa898fa)) - [@jgeluk](https://github.com/jgeluk)
