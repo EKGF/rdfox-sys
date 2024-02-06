@@ -1,0 +1,51 @@
+name: clippy
+on: [push, pull_request]
+
+env:
+  RUSTUP_TOOLCHAIN: nightly
+  RUSTUP_HOME: /home/runner/.cargo
+  CARGO_TERM_COLOR: always
+  LLVM_VERSION: 14.0.0
+
+jobs:
+  clippy_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUSTUP_TOOLCHAIN }}
+          profile: minimal
+          components: clippy
+          override: true
+          default: true
+
+      - name: Cache LLVM and Clang
+        id: cache-llvm
+        uses: actions/cache@v2
+        with:
+          path: |
+            C:/Program Files/LLVM
+            ./llvm
+          key: llvm-14
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "14"
+          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+
+      - name: Check formatting
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-features

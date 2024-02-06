@@ -1,0 +1,118 @@
+name: build
+on:
+  push:
+    branches:
+      - '**'
+    tags:
+      - '*'
+  pull_request:
+
+env:
+  RUSTUP_TOOLCHAIN: nightly
+  CARGO_TERM_COLOR: always
+  LLVM_VERSION: 14.0.0
+
+jobs:
+  build:
+    name: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-12
+          - windows-2022
+          - ubuntu-latest
+        include:
+          - os: macos-12
+            target: x86_64-apple-darwin
+            rustup_home: /Users/runner/.cargo
+          - os: windows-2022
+            target: x86_64-pc-windows-msvc
+            rustup_home: C:/Users/runneradmin/.cargo
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            rustup_home: /home/runner/.cargo
+    runs-on: ${{ matrix.os }}
+    env:
+      RUSTUP_HOME: ${{ matrix.rustup_home }}
+      RUST_TARGET: ${{ matrix.target }}
+      MAKE: ${{ matrix.make_bin }}
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          all_but_latest: true
+          access_token: ${{ github.token }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Cache LLVM and Clang
+        id: cache-llvm
+        uses: actions/cache@v2
+        with:
+          path: |
+            C:/Program Files/LLVM
+            ./llvm
+          key: llvm-15
+
+      - name: Install LLVM and Clang
+        id: install-llvm
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: 15
+          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+
+      - name: Windows - Prepare LLVM
+        if: contains(matrix.os, 'windows')
+        shell: bash
+        env:
+          LLVM_VERSION: ${{ steps.install-llvm.outputs.version }}
+        run: |
+          export LLVM_PATH="C:\Program Files\LLVM"
+          echo LLVM_PATH="C:\Program Files\LLVM" >> $GITHUB_ENV
+          echo "CPATH=$LLVM_PATH\lib\clang\$LLVM_VERSION\include\" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=$LLVM_PATH/lib" >> $GITHUB_ENV
+          echo "DYLD_LIBRARY_PATH=$LLVM_PATH/lib" >> $GITHUB_ENV
+          echo "LDFLAGS=-L$LLVM_PATH\lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I$LLVM_PATH\include" >> $GITHUB_ENV
+          echo "CC=$LLVM_PATH\bin\clang" >> $GITHUB_ENV
+          echo "CXX=$LLVM_PATH\bin\clang++" >> $GITHUB_ENV
+          "${LLVM_PATH}\bin\clang" -v
+          echo "---"
+          cat $GITHUB_ENV
+
+      - name: MacOS - Prepare LLVM
+        if: contains(matrix.os, 'macos')
+        shell: bash
+        env:
+          LLVM_PATH: /Users/runner/work/rdfox-sys/rdfox-sys/llvm
+          LLVM_VERSION: ${{ steps.install-llvm.outputs.version }}
+        run: |
+          set -x
+          # export LLVM_PATH="$(brew --prefix llvm)"
+          "$LLVM_PATH/bin/clang" -v
+          echo "LLVM_VERSION=$LLVM_VERSION" >> $GITHUB_ENV
+          echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
+          echo "CPATH=$LLVM_PATH/lib/clang/$LLVM_VERSION/include/" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=$LLVM_PATH/lib" >> $GITHUB_ENV
+          echo "DYLD_LIBRARY_PATH=$LLVM_PATH/lib" >> $GITHUB_ENV
+          echo "LDFLAGS=-L$LLVM_PATH/lib" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I$LLVM_PATH/include" >> $GITHUB_ENV
+          echo "CC=$LLVM_PATH/bin/clang" >> $GITHUB_ENV
+          echo "CXX=$LLVM_PATH/bin/clang++" >> $GITHUB_ENV
+
+      - name: Release build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --no-default-features --features nom --features rdfox-6-3a
