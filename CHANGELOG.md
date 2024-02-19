@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.0.3](https://github.com/EKGF/rdfox-sys/compare/0.0.2..0.0.3) - 2024-02-19
+#### Refactoring
+- removed ekg-namespace dependency that got injected by callers of the `database_call!()` macro - ([e97d995](https://github.com/EKGF/rdfox-sys/commit/e97d995f4af250d0fcdd9289c2639df6c4309030)) - [@jgeluk](https://github.com/jgeluk)
+
+- - -
+
 ## [0.0.2](https://github.com/EKGF/rdfox-sys/compare/0.0.1..0.0.2) - 2024-02-06
 #### Miscellaneous Chores
 - squashed all history from rdfox-rs repo - ([ad12915](https://github.com/EKGF/rdfox-sys/commit/ad1291531761767a58f7f7e537646e2cc65513b0)) - [@jgeluk](https://github.com/jgeluk)
