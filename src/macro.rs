@@ -9,7 +9,7 @@ macro_rules! database_call {
     ($action:expr, $function:expr) => {{
         // tracing::trace!("{} at line {}", stringify!($function), line!());
         tracing::trace!(
-            target: ekg_namespace::consts::LOG_TARGET_DATABASE,
+            target: "database", // ekg_namespace::consts::LOG_TARGET_DATABASE,
             "{}",
             $action
         );
