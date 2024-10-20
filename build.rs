@@ -126,33 +126,22 @@ lazy_static! {
     static ref RDFOX_DOWNLOAD_HOST: &'static str = option_env!("RDFOX_DOWNLOAD_HOST")
         .unwrap_or("https://rdfox-distribution.s3.eu-west-2.amazonaws.com/release");
 }
-#[cfg(feature = "rdfox-6-2")]
-lazy_static! {
-    static ref RDFOX_VERSION_EXPECTED: &'static str =
-        option_env!("RDFOX_VERSION_EXPECTED").unwrap_or("6.2");
-}
-#[cfg(feature = "rdfox-6-3a")]
-lazy_static! {
-    static ref RDFOX_VERSION_EXPECTED: &'static str =
-        option_env!("RDFOX_VERSION_EXPECTED").unwrap_or("6.3a");
-}
-#[cfg(feature = "rdfox-6-3b")]
-lazy_static! {
-    static ref RDFOX_VERSION_EXPECTED: &'static str =
-        option_env!("RDFOX_VERSION_EXPECTED").unwrap_or("6.3b");
-}
-#[cfg(feature = "rdfox-7-0a")]
-lazy_static! {
-    static ref RDFOX_VERSION_EXPECTED: &'static str =
-        option_env!("RDFOX_VERSION_EXPECTED").unwrap_or("7.0a");
-}
-#[cfg(not(any(
-    feature = "rdfox-6-2",
-    feature = "rdfox-6-3a",
-    feature = "rdfox-6-3b",
-    feature = "rdfox-7-0a"
-)))]
+
+#[cfg(not(any(feature = "rdfox-7-0a", feature = "rdfox-7-2",)))]
 compile_error!("You have to at least specify one of the rdfox-X-Y version number features");
+
+lazy_static! {
+    static ref RDFOX_VERSION_EXPECTED: &'static str = option_env!("RDFOX_VERSION_EXPECTED")
+        .unwrap_or(
+            if cfg!(feature = "rdfox-7-0a") {
+                "7.0a"
+            } else if cfg!(feature = "rdfox-7-2") {
+                "7.2"
+            } else {
+                panic!("Unknown RDFOX version")
+            }
+        );
+}
 
 fn rdfox_download_url() -> String {
     let host = *RDFOX_DOWNLOAD_HOST;
@@ -309,9 +298,9 @@ fn set_clang_path<S: Into<String>>(path: Option<S>) -> Option<(PathBuf, PathBuf)
     if !clang_bin.exists() {
         clang_bin = path.join("clang");
     }
-    if clang_bin.exists() {
-        println!("cargo:warning=using {}", clang_bin.display());
-    }
+    // if clang_bin.exists() {
+    //     println!("cargo:warning=using {}", clang_bin.display());
+    // }
     Some((path, clang_bin))
 }
 
@@ -330,12 +319,12 @@ fn set_llvm_config_path<S: Into<String>>(path: Option<S>) -> Option<(PathBuf, Pa
     if !llvm_config_bin.exists() {
         llvm_config_bin = path.join("llvm-config");
     }
-    if llvm_config_bin.exists() {
-        println!(
-            "cargo:warning=using {}",
-            llvm_config_bin.display()
-        );
-    }
+    // if llvm_config_bin.exists() {
+    //     println!(
+    //         "cargo:warning=using {}",
+    //         llvm_config_bin.display()
+    //     );
+    // }
     Some((path, llvm_config_bin))
 }
 
@@ -400,6 +389,7 @@ fn check_homebrew_prefix() -> Option<PathBuf> {
     if let Ok(output) = Command::new("brew").args(["--prefix"]).output() {
         let homebrew_prefix =
             String::from_utf8(output.stdout).expect("`brew --prefix` output must be UTF-8");
+        #[allow(irrefutable_let_patterns)]
         if let Ok(path) = PathBuf::try_from(homebrew_prefix) {
             return Some(path);
         }

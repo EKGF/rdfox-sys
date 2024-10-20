@@ -5,7 +5,7 @@ version = "0.0.3"
 edition = "2021"
 links = "RDFox-static"
 authors = [
-    "Jacobus Geluk <jacobus.geluk@ekgf.org>",
+  "Jacobus Geluk <jacobus.geluk@ekgf.org>",
 ]
 repository = "https://github.com/EKGF/rdfox-sys"
 keywords = ["rdf", "sparql", "database", "graph-database", "datalog"]
@@ -28,24 +28,21 @@ thiserror = "1.0.56"
 [build-dependencies]
 curl = "0.4.44"
 lazy_static = "1.4.0"
-zip = "0.6.2"
-bindgen = "0.69.2"
+zip = "2.2.0"
+bindgen = "0.70.1"
 
 [package.metadata.docs.rs]
 rustc-args = ["--cfg", "docsrs"]
 
 [features]
-default = ["rdfox-7-0a", "rdfox-dylib"]
+default = ["rdfox-7-2", "rdfox-dylib"]
 #
 # Switch on if you want to link to `libRDFox.dylib` rather than `libRDFox.a`
 #
 rdfox-dylib = []
+rdfox-static = []
 #
-# Select a version
+# Select one version
 #
-rdfox-6-2 = []
-rdfox-6-3a = []
-rdfox-6-3b = []
 rdfox-7-0a = []
-
-
+rdfox-7-2 = []
