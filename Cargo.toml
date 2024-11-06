@@ -11,7 +11,7 @@ repository = "https://github.com/EKGF/rdfox-sys"
 keywords = ["rdf", "sparql", "database", "graph-database", "datalog"]
 categories = ["database", "api-bindings"]
 license-file = "LICENSE"
-rust-version = "1.70"
+rust-version = "1.82"
 readme = "README.md"
 documentation = "https://docs.rs/crate/rdfox-sys/"
 exclude = [".github/*", ".idea/*", "rust-toolchain.toml", "cog.toml"]
@@ -23,11 +23,11 @@ crate-type = ["rlib"]
 bench = false
 
 [dependencies]
-thiserror = "1.0.56"
+thiserror = "1.0.68"
 
 [build-dependencies]
-curl = "0.4.44"
-lazy_static = "1.4.0"
+curl = "0.4.47"
+lazy_static = "1.5.0"
 zip = "2.2.0"
 bindgen = "0.70.1"
 
@@ -35,7 +35,7 @@ bindgen = "0.70.1"
 rustc-args = ["--cfg", "docsrs"]
 
 [features]
-default = ["rdfox-7-2", "rdfox-dylib"]
+default = ["rdfox-7-2a", "rdfox-dylib"]
 #
 # Switch on if you want to link to `libRDFox.dylib` rather than `libRDFox.a`
 #
@@ -45,4 +45,4 @@ rdfox-static = []
 # Select one version
 #
 rdfox-7-0a = []
-rdfox-7-2 = []
+rdfox-7-2a = []

@@ -127,7 +127,7 @@ lazy_static! {
         .unwrap_or("https://rdfox-distribution.s3.eu-west-2.amazonaws.com/release");
 }
 
-#[cfg(not(any(feature = "rdfox-7-0a", feature = "rdfox-7-2",)))]
+#[cfg(not(any(feature = "rdfox-7-0a", feature = "rdfox-7-2a",)))]
 compile_error!("You have to at least specify one of the rdfox-X-Y version number features");
 
 lazy_static! {
@@ -135,7 +135,7 @@ lazy_static! {
         .unwrap_or(
             if cfg!(feature = "rdfox-7-0a") {
                 "7.0a"
-            } else if cfg!(feature = "rdfox-7-2") {
+            } else if cfg!(feature = "rdfox-7-2a") {
                 "7.2"
             } else {
                 panic!("Unknown RDFOX version")
