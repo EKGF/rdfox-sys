@@ -136,7 +136,7 @@ lazy_static! {
             if cfg!(feature = "rdfox-7-0a") {
                 "7.0a"
             } else if cfg!(feature = "rdfox-7-2a") {
-                "7.2"
+                "7.2a"
             } else {
                 panic!("Unknown RDFOX version")
             }
