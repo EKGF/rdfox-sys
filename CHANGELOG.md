@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.0.5](https://github.com/EKGF/rdfox-sys/compare/bf7e582afa79ba25733cb6d918f3e4c17aab89a2..0.0.5) - 2024-11-06
+#### Features
+- replaced 7.2 with 7.2a (7.2 no longer available for download from RDFox website) - ([bf7e582](https://github.com/EKGF/rdfox-sys/commit/bf7e582afa79ba25733cb6d918f3e4c17aab89a2)) - [@jgeluk](https://github.com/jgeluk)
+
+- - -
+
 ## [0.0.4](https://github.com/EKGF/rdfox-sys/compare/5badfe5ced8c6900d387ea48ee4022502d461c39..0.0.4) - 2024-11-06
 #### Features
 - replaced 7.2 with 7.2a (7.2 no longer available for download from RDFox website) - ([ffc6a9e](https://github.com/EKGF/rdfox-sys/commit/ffc6a9e155cf8ac9394544cc14d72a23a71910a4)) - [@jgeluk](https://github.com/jgeluk)
