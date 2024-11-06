@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [0.0.4](https://github.com/EKGF/rdfox-sys/compare/5badfe5ced8c6900d387ea48ee4022502d461c39..0.0.4) - 2024-11-06
+#### Features
+- replaced 7.2 with 7.2a (7.2 no longer available for download from RDFox website) - ([ffc6a9e](https://github.com/EKGF/rdfox-sys/commit/ffc6a9e155cf8ac9394544cc14d72a23a71910a4)) - [@jgeluk](https://github.com/jgeluk)
+- removed support for RDFox 6.* and added support for 7.2 - ([49b40c9](https://github.com/EKGF/rdfox-sys/commit/49b40c9ddda4e1a138240a51f9a8745164dfa26b)) - [@jgeluk](https://github.com/jgeluk)
+#### Miscellaneous Chores
+- added rustrover run configs - ([5badfe5](https://github.com/EKGF/rdfox-sys/commit/5badfe5ced8c6900d387ea48ee4022502d461c39)) - [@jgeluk](https://github.com/jgeluk)
+
+- - -
+
 ## [0.0.3](https://github.com/EKGF/rdfox-sys/compare/0.0.2..0.0.3) - 2024-02-19
 #### Refactoring
 - removed ekg-namespace dependency that got injected by callers of the `database_call!()` macro - ([e97d995](https://github.com/EKGF/rdfox-sys/commit/e97d995f4af250d0fcdd9289c2639df6c4309030)) - [@jgeluk](https://github.com/jgeluk)
